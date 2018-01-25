@@ -31,7 +31,7 @@ class ForumPage:
 
         self.posts = []
 
-        tbody = page.xpath('//tbody')[0]
+        tbody = page.xpath('//tbody')[-1]
         for tr in tbody:
             if tr.text_content() == '普通主題':
                 seperator_index = tbody.index(tr)
