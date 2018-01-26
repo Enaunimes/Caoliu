@@ -48,3 +48,24 @@ class ForumPage:
                 pub_date = tr[2][1].text_content()
             post = CaoliuPost(caoliu_site+href, title, author_name, author_uid, pub_date)
             self.posts.append(post)
+
+def grab_torrent_url(post_url):
+    response = requests.get(post_url, headers=fake_headers)
+    page = html.fromstring(response.content)
+    rmdown_match = re.compile('^http\://www\.rmdown\.com/link\.php\?hash\=[a-z0-9]*$')
+    for anchor in page.xpath('//a'):
+        if rmdown_match.match(anchor.text_content()):
+            dl_page_url = anchor.text_content()
+            response = requests.get(dl_page_url, headers=fake_headers)
+            page = html.fromstring(response.content)
+            form = page.xpath('//form')[0]
+            reff = form.xpath('input[@name="reff"]')[0].get('value')
+            ref = form.xpath('input[@name="ref"]')[0].get('value')
+            return 'http://www.rmdown.com/download.php?reff={}&ref={}'.format(reff, ref)
+    else:
+        return None
+
+def download_torrent(torrent_url, filename):
+    response = requests.get(torrent_url, headers=fake_headers)
+    with open(filename, 'bw') as file_output:
+        file_output.write(response.content)
