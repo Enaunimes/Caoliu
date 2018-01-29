@@ -65,7 +65,13 @@ def grab_torrent_url(post_url):
     else:
         return None
 
-def download_torrent(torrent_url, filename):
-    response = requests.get(torrent_url, headers=fake_headers)
-    with open(filename, 'bw') as file_output:
-        file_output.write(response.content)
+def download_torrent(torrent_url, filename=None):
+    try:
+        filename = '{}.torrent'.format(re.search('(?<=ref\=)[a-z0-9]*$', torrent_url).group())
+    except AttributeError:
+        return None
+    else:
+        response = requests.get(torrent_url, headers=fake_headers)
+        with open(filename, 'bw') as file_output:
+            file_output.write(response.content)
+        return None
