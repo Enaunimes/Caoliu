@@ -10,14 +10,14 @@ caoliu_site = 'http://t66y.com/'
 # TODO: superclass Page
 
 class CaoliuPost:
-    # TODO self.gilded
-    def __init__(self, url, title, author_name, author_uid, pub_date):
+    # TODO change positional arguments to keyword arguments
+    def __init__(self, url, title, author_name, author_uid, pub_date, gilded):
         self.url = url
         self.title = title
         self.author_name = author_name
         self.author_uid = author_uid
         self.pub_date = pub_date
-#        self.gilded = gilded
+        self.gilded = gilded
     def get_content(self):
         fake_headers = {}
         response = requests.get(self.url, header=fake_headers)
@@ -46,7 +46,11 @@ class ForumPage:
                 pub_date = re.search('\d\d\d\d-\d\d-\d\d', tr[2][1][0].get('title')).group()
             else:
                 pub_date = tr[2][1].text_content()
-            post = CaoliuPost(caoliu_site+href, title, author_name, author_uid, pub_date)
+            if tr.xpath('.//span[@class="sgreen"]'):
+                gilded = True
+            else:
+                gilded = False
+            post = CaoliuPost(caoliu_site+href, title, author_name, author_uid, pub_date, gilded)
             self.posts.append(post)
 
 def grab_torrent_url(post_url):
