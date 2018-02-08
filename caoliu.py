@@ -37,6 +37,7 @@ class ForumPage:
                 seperator_index = tbody.index(tr)
                 # excluding top and bottom seperator
                 table_of_posts = tbody[seperator_index+1:-1]
+                break
         else:
             table_of_posts = tbody[2:-1]
         for tr in table_of_posts:
