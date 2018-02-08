@@ -8,13 +8,13 @@ FORUM_URL = "http://t66y.com/thread0806.php?fid=25"
 
 guochan_forum = caoliu.ForumPage(FORUM_URL)
 
-post_urls = [post.url for post in guochan_forum.posts if re.search('fhd', post.title, re.I)]
+posts = [post for post in guochan_forum.posts if re.search('fhd', post.title, re.I)]
 
 print('Parsing posts to find torrents...')
 torrent_urls = set()
 with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
-    for url in post_urls:
-        futures = {executor.submit(caoliu.grab_torrent_url, url) for url in post_urls}
+    for post in posts:
+        futures = {executor.submit(caoliu.grab_torrent_url, post) for post in posts}
         for future in concurrent.futures.as_completed(futures):
             try:
                 result = future.result()

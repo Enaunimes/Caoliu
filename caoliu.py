@@ -20,7 +20,7 @@ class CaoliuPost:
         self.gilded = gilded
     def get_content(self):
         fake_headers = {}
-        response = requests.get(self.url, header=fake_headers)
+        response = requests.get(self.url, headers=fake_headers)
         return response.content.decode('GB18030')
 
 class ForumPage:
@@ -53,9 +53,8 @@ class ForumPage:
             post = CaoliuPost(caoliu_site+href, title, author_name, author_uid, pub_date, gilded)
             self.posts.append(post)
 
-def grab_torrent_url(post_url):
-    response = requests.get(post_url, headers=fake_headers)
-    page = html.fromstring(response.content)
+def grab_torrent_url(post):
+    page = html.fromstring(post.get_content())
     rmdown_match = re.compile('^http\://www\.rmdown\.com/link\.php\?hash\=[a-z0-9]*$')
     for anchor in page.xpath('//a'):
         if rmdown_match.match(anchor.text_content()):
