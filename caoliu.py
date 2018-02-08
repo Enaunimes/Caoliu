@@ -11,13 +11,14 @@ caoliu_site = 'http://t66y.com/'
 
 class CaoliuPost:
     # TODO change positional arguments to keyword arguments
-    def __init__(self, url, title, author_name, author_uid, pub_date, gilded):
+    def __init__(self, url, title, author_name, author_uid, pub_date, gilded, replies):
         self.url = url
         self.title = title
         self.author_name = author_name
         self.author_uid = author_uid
         self.pub_date = pub_date
         self.gilded = gilded
+        self.replies = replies
     def get_content(self):
         fake_headers = {}
         response = requests.get(self.url, headers=fake_headers)
@@ -53,7 +54,8 @@ class ForumPage:
                 gilded = True
             else:
                 gilded = False
-            post = CaoliuPost(caoliu_site+href, title, author_name, author_uid, pub_date, gilded)
+            replies = tr[3].text_content()
+            post = CaoliuPost(caoliu_site+href, title, author_name, author_uid, pub_date, gilded, replies)
             self.posts.append(post)
 
 def grab_torrent_url(post):
