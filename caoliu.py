@@ -35,8 +35,10 @@ class ForumPage:
         for tr in tbody:
             if tr.text_content() == '普通主題':
                 seperator_index = tbody.index(tr)
-        # excluding top and bottom seperator
-        table_of_posts = tbody[seperator_index+1:-1]
+                # excluding top and bottom seperator
+                table_of_posts = tbody[seperator_index+1:-1]
+        else:
+            table_of_posts = tbody[2:-1]
         for tr in table_of_posts:
             title = tr[1][0][0].text_content()
             href = tr[1][0][0].get('href')
