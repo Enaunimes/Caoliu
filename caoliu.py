@@ -45,16 +45,16 @@ class ForumPage:
             title = tr[1][0][0].text_content()
             href = tr[1][0][0].get('href')
             author_name = tr[2][0].text_content()
-            author_uid = re.search('(?<=uid\=)\d*$', tr[2][0].get('href'))
+            author_uid = re.search('(?<=uid\=)\d*$', tr[2][0].get('href')).group()
             if len(tr[2][1]) > 0:
                 pub_date = re.search('\d\d\d\d-\d\d-\d\d', tr[2][1][0].get('title')).group()
             else:
                 pub_date = tr[2][1].text_content()
             if tr.xpath('.//span[@class="sgreen"]'):
-                gilded = True
+                gilded = 1
             else:
-                gilded = False
-            replies = tr[3].text_content()
+                gilded = 0
+            replies = int(tr[3].text_content())
             post = CaoliuPost(caoliu_site+href, title, author_name, author_uid, pub_date, gilded, replies)
             self.posts.append(post)
 
