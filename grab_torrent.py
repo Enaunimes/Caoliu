@@ -13,16 +13,15 @@ posts = [post for post in guochan_forum.posts if re.search('fhd', post.title, re
 print('Parsing posts to find torrents...')
 torrent_urls = set()
 with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
-    for post in posts:
-        futures = {executor.submit(caoliu.grab_torrent_url, post) for post in posts}
-        for future in concurrent.futures.as_completed(futures):
-            try:
-                result = future.result()
-            except Exception as exc:
-                print('ERR: %s' % exc)
-            else:
-                torrent_urls.add(result)
-                print('parsing...')
+    futures = {executor.submit(caoliu.grab_torrent_url, post) for post in posts}
+    for future in concurrent.futures.as_completed(futures):
+        try:
+            result = future.result()
+        except Exception as exc:
+            print('ERR: %s' % exc)
+        else:
+            torrent_urls.add(result)
+            print('parsing...')
                 
 if None in torrent_urls:
     torrent_urls.remove(None)
